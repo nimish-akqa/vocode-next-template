@@ -4,7 +4,7 @@ from fastapi import FastAPI, WebSocket
 import datetime
 import json
 
-from langchain import hub
+# from langchain import hub
 
 from vocode.streaming.models.agent import ChatGPTAgentConfig
 from vocode.streaming.models.synthesizer import AzureSynthesizerConfig
@@ -37,30 +37,31 @@ if langsmith_system_prompt and system_prompt:
     logger.info("Both 'LANGSMITH_SYSTEM_PROMPT' and 'SYSTEM_PROMPT' are defined. "
                 "'LANGSMITH_SYSTEM_PROMPT' will be used.")
 
-def get_system_prompt():
-    """
-    This function generates a dynamic SYSTEM_PROMPT with the current date.
-    """
-    if langsmith_system_prompt:
-        # Retrieve the system message from langsmith and format it with the current date
-        req = hub.pull(langsmith_system_prompt)
-        return req.format_messages(
-            current_date=datetime.datetime.now().strftime("%Y-%m-%d"),
-            question=""
-        )[0].content
-    elif system_prompt:
-        # Use the system message defined in the environment variable
-        return system_prompt
-    else:
-        # Default message if no environment variable is defined
-        return "Have a pleasant conversation about life"
+# def get_system_prompt():
+#     """
+#     This function generates a dynamic SYSTEM_PROMPT with the current date.
+#     """
+#     if langsmith_system_prompt:
+#         # Retrieve the system message from langsmith and format it with the current date
+#         req = hub.pull(langsmith_system_prompt)
+#         return req.format_messages(
+#             current_date=datetime.datetime.now().strftime("%Y-%m-%d"),
+#             question=""
+#         )[0].content
+#     elif system_prompt:
+#         # Use the system message defined in the environment variable
+#         return system_prompt
+#     else:
+#         # Default message if no environment variable is defined
+#         return "Have a pleasant conversation about life"
 
 
 conversation_router = ConversationRouter(
     agent_thunk=lambda: ChatGPTAgent(
         ChatGPTAgentConfig(
             initial_message=BaseMessage(text=INITIAL_MESSAGE),
-            prompt_preamble=get_system_prompt(),
+            # prompt_preamble=get_system_prompt(),
+            prompt_preamble='Have a pleasant conversation about life',
         )
     ),
     synthesizer_thunk=lambda output_audio_config: AzureSynthesizer(

@@ -30,7 +30,7 @@ function PingComponent({ backendUrl, setIsOnline }: PingComponentProps) {
         const url = new URL(backendUrl);
         const host = url.host;
         const pingUrl = url.protocol + '//' + host + '/api/ping';
-        console.log(pingUrl, 'hehe')
+
         wsRef.current = new WebSocket(pingUrl);
         wsRef.current.onopen = () => {
             setIsOnline(true);

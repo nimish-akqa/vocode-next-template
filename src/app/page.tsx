@@ -6,8 +6,6 @@ import dynamic from 'next/dynamic';
 import Image from 'next/image'
 
 const VocodeAppDynamic = dynamic(() => import('@/components/vocode-app'), { ssr: false });
-let a = (window.location.protocol === 'https:' ? 'wss:' : 'ws:') + "//" + window.location.host + "/api/python/conversation";
-console.log(a)
 
 export default function Home() {
   return (
