@@ -29,14 +29,12 @@ function PingComponent({ backendUrl, setIsOnline }: PingComponentProps) {
         // This is done to ensure that the WebSocket connection for the ping component is made to the correct endpoint.
         const url = new URL(backendUrl);
         const host = url.host;
-        const pingUrl = url.protocol + host + '/api/ping';
-
+        const pingUrl = url.protocol + '//' + host + '/api/ping';
+        console.log(pingUrl, 'hehe')
         wsRef.current = new WebSocket(pingUrl);
-
         wsRef.current.onopen = () => {
             setIsOnline(true);
             setIsOnlineLocal(true); // Add this line
-
             intervalIdRef.current = window.setInterval(() => {
                 if (wsRef.current?.readyState === WebSocket.OPEN) {
                     wsRef.current.send(JSON.stringify({
@@ -46,7 +44,7 @@ function PingComponent({ backendUrl, setIsOnline }: PingComponentProps) {
                 }
             }, 5000);
         };
-            
+
         wsRef.current.onmessage = (event) => {
             const currentTime = performance.now();
             const data = JSON.parse(event.data);
